@@ -1,0 +1,80 @@
+#include <Wire.h>
+#include <Adafruit_LiquidCrystal.h>
+
+// Definindo o endereço do LCD
+Adafruit_LiquidCrystal lcd(0x20);
+
+// Definindo os pinos dos fotorresistores
+#define Vermelho A0
+#define Verde A1
+#define Azul A2
+
+// Definindo os pinos do LED RGB
+#define LEDVermelho 11
+#define LEDAzul 10
+#define LEDVerde 9
+
+ 
+
+void setup() {
+  // Inicializando o LCD
+  lcd.begin(16, 2);
+  lcd.setBacklight(HIGH);  // Liga a luz de fundo
+  
+
+
+
+  // Exibir mensagem de boas-vindas
+  lcd.clear();
+  lcd.setCursor(3, 0);
+  lcd.print("Bem-vindo!");
+  delay(2000); // Aguarda 2 segundos
+  lcd.clear(); // Limpa o LCD completamente
+
+  // Inicializando os pinos dos fotorresistores como entradas
+  pinMode(Vermelho, INPUT);
+  pinMode(Verde, INPUT);
+  pinMode(Azul, INPUT);
+ 
+  // Inicializando os pinos do LED como saídas
+  pinMode(LEDVermelho, OUTPUT);
+  pinMode(LEDVerde, OUTPUT);
+  pinMode(LEDAzul, OUTPUT);
+}
+
+void loop() {
+  // Lendo os valores dos fotorresistores
+  int vermelho = analogRead(Vermelho);
+  int verde = analogRead(Verde);
+  int azul = analogRead(Azul);
+ 
+  // Mapeando os valores dos fotorresistores para os valores de PWM (0-255)
+  vermelho = map(vermelho, 0, 1023, 0, 255);
+  verde = map(verde, 0, 1023, 0, 255);
+  azul = map(azul, 0, 1023, 0, 255);
+ 
+  // Escrevendo os valores de PWM para os pinos do LED
+  analogWrite(LEDVermelho, vermelho);
+  analogWrite(LEDVerde, verde);
+  analogWrite(LEDAzul, azul);
+
+  // Exibindo os valores no LCD
+
+  lcd.setCursor(0, 0);
+  lcd.print("R: ");
+  lcd.print(vermelho);
+  lcd.print("   "); 
+
+  lcd.setCursor(8, 0);
+  lcd.print("G: ");
+  lcd.print(verde);
+  lcd.print("   ");
+
+  lcd.setCursor(0, 1);
+  lcd.print("B: ");
+  lcd.print(azul);
+  lcd.print("   ");
+
+  // Atraso para evitar sobrecarga
+  delay(500);
+}
